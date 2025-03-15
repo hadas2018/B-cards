@@ -1,0 +1,52 @@
+
+
+/* סגנונות ספציפיים למצב כהה */
+[data-bs-theme="dark"] {
+    --bs-body-bg: #121212 !important;
+    --bs-body-color: #e0e0e0 !important;
+  }
+  
+  /* מאפיין את הרקע של כל הגוף */
+  body[data-bs-theme="dark"] {
+    background-color: var(--bs-body-bg) !important;
+    color: var(--bs-body-color) !important;
+  }
+  
+  /* מאפיין מיכלים ורכיבים */
+   [data-bs-theme="dark"] .container,
+  [data-bs-theme="dark"] .container-fluid {
+    background-color: var(--bs-body-bg) !important;
+  } 
+   
+  /* מאפיין כרטיסים */
+  [data-bs-theme="dark"] .card {
+    background-color: #1e1e1e !important;
+    border-color: #444 !important;
+  }
+  
+  [data-bs-theme="dark"] .card-body {
+    background-color: #1e1e1e !important;
+  } 
+  
+  /* עבור דף About וטקסטים */
+   [data-bs-theme="dark"] .text-primary {
+    color: #5c9eff !important;
+  } 
+  
+  /* צבעים לרכיבי ממשק */
+  [data-bs-theme="dark"] .navbar,
+  [data-bs-theme="dark"] .footer-nav {
+    background-color: #1e1e1e !important;
+    border-color: #444 !important;
+  } 
+  
+  /* כפתורים במצב כהה */
+  [data-bs-theme="dark"] .btn-outline-primary {
+    color: #5c9eff !important;
+    border-color: #5c9eff !important;
+  }
+  
+  [data-bs-theme="dark"] .btn-outline-primary:hover {
+    background-color: #2a6cc7 !important;
+    color: white !important;
+  }
