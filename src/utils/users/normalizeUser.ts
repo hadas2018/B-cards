@@ -3,6 +3,7 @@ import { User } from "../../interfaces/users/User";
 
 export function normalizeUser(values: unnormalizedUser): User {
   return {
+   
     name: {
       first: values.first,
       middle: values.middle,
@@ -24,5 +25,6 @@ export function normalizeUser(values: unnormalizedUser): User {
       zip: values.zip,
     },
     isBusiness: values.isBusiness,
+    
   };
 }

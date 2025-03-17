@@ -3,6 +3,8 @@ import { UserImage } from "./UserImage";
 import { UserName } from "./UserName";
 
 export interface User {
+  createdAt: number;
+  isAdmin: boolean;
   name: UserName;
   phone: string;
   email: string;

@@ -1,20 +1,41 @@
 import { FunctionComponent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-// import { Card } from "../interfaces/cards/Card";
-// import { useAuth } from "../context/AuthContext";
 import { getMyCards, deleteCard } from "../services/cardsService";
 import { errorMessage, sucessMassage } from "../services/feedbackService";
 import { Card } from "../interfaces/cards/Cards";
 import { useAuth } from "./context/AuthContext";
+import { useSearch } from "./context/SearchContext";
+import { useDeleteConfirmation } from "../hooks/useDeleteConfirmation";
 import Bcard from "./cards/Bcard";
-// import Bcard from "./common/Bcard";
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
 
 interface MyCardsProps {}
 
 const MyCards: FunctionComponent<MyCardsProps> = () => {
   const [cards, setCards] = useState<Card[]>([]);
+  const [filteredCards, setFilteredCards] = useState<Card[]>([]);
   const [loading, setLoading] = useState(true);
   const { user, isLoggedIn } = useAuth();
+  const { searchTerm } = useSearch();
+
+  // פונקציית המחיקה עצמה שתועבר להוק
+  const deleteHandler = async (id: string, type: "card" | "user" | "item") => {
+    try {
+      if (type === "card") {
+        await deleteCard(id);
+        setCards((prev) => prev.filter((card) => card._id !== id));
+        sucessMassage("הכרטיס נמחק בהצלחה");
+      }
+    } catch (err) {
+      console.error("שגיאה במחיקת הכרטיס:", err);
+      errorMessage("אירעה שגיאה במחיקת הכרטיס");
+      throw err; // להעביר את השגיאה להוק לטיפול
+    }
+  };
+
+  // שימוש בהוק המשודרג
+  const { handleDeleteClick, deleteModalProps } =
+    useDeleteConfirmation(deleteHandler);
 
   useEffect(() => {
     // וודא שהמשתמש מחובר
@@ -26,6 +47,30 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
     // טען את הכרטיסים של המשתמש
     loadCards();
   }, [isLoggedIn, user]);
+
+  // סינון הכרטיסים לפי מושג החיפוש
+  useEffect(() => {
+    if (!searchTerm.trim()) {
+      setFilteredCards(cards);
+      return;
+    }
+
+    const searchTermLower = searchTerm.toLowerCase();
+    const filtered = cards.filter(
+      (card) =>
+        card.title.toLowerCase().includes(searchTermLower) ||
+        card.description.toLowerCase().includes(searchTermLower) ||
+        (card.address &&
+          ((card.address.city &&
+            card.address.city.toLowerCase().includes(searchTermLower)) ||
+            (card.address.street &&
+              card.address.street.toLowerCase().includes(searchTermLower)) ||
+            (card.address.country &&
+              card.address.country.toLowerCase().includes(searchTermLower))))
+    );
+
+    setFilteredCards(filtered);
+  }, [searchTerm, cards]);
 
   const loadCards = () => {
     setLoading(true);
@@ -40,20 +85,6 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
       .finally(() => {
         setLoading(false);
       });
-  };
-
-  const handleDeleteCard = (cardId: string) => {
-    if (window.confirm("האם אתה בטוח שברצונך למחוק כרטיס זה?")) {
-      deleteCard(cardId)
-        .then(() => {
-          setCards(cards.filter((card) => card._id !== cardId));
-          sucessMassage("הכרטיס נמחק בהצלחה");
-        })
-        .catch((err) => {
-          console.error("שגיאה במחיקת הכרטיס:", err);
-          errorMessage("אירעה שגיאה במחיקת הכרטיס");
-        });
-    }
   };
 
   if (loading) {
@@ -97,18 +128,36 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
   return (
     <div className="container mt-4">
       <h1 className="mb-4">הכרטיסים שלי</h1>
-      
+
+      {/* הצגת הודעה כאשר מסננים ואין תוצאות */}
+      {searchTerm && filteredCards.length === 0 && (
+        <div className="alert alert-info">
+          <h5>לא נמצאו תוצאות לחיפוש "{searchTerm}"</h5>
+          <p className="mb-0">נסה לחפש עם מילות מפתח אחרות או בדוק את האיות</p>
+        </div>
+      )}
+
+      {/* הצגת מספר התוצאות כאשר מסננים ויש תוצאות */}
+      {searchTerm && filteredCards.length > 0 && (
+        <p className="alert alert-info mb-4">
+          נמצאו {filteredCards.length} תוצאות לחיפוש "{searchTerm}"
+        </p>
+      )}
+
       <div className="row">
-        {cards.map((card) => (
+        {filteredCards.map((card) => (
           <div className="col-md-4 col-sm-6 mb-4" key={card._id}>
-            <Bcard 
-              card={card} 
-              isMyCard={true} 
-              onDelete={handleDeleteCard} 
+            <Bcard
+              card={card}
+              isMyCard={true}
+              onDelete={(id) => handleDeleteClick(id, "card")}
             />
           </div>
         ))}
       </div>
+
+      {/* מודל אישור המחיקה */}
+      <DeleteConfirmationModal {...deleteModalProps} />
     </div>
   );
 };

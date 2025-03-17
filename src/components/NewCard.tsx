@@ -7,7 +7,6 @@ import { postNewCard } from "../services/cardsService";
 import { errorMessage, sucessMassage } from "../services/feedbackService";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
-// import { useAuth } from "../context/AuthContext";
 
 interface NewCardProps {}
 

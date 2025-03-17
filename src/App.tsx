@@ -17,38 +17,38 @@ import Footer from "./components/Footer";
 import About from "./components/context/About";
 import ScrollToTop from "./components/ScrollToTop";
 import { ThemeProvider } from "./components/context/ThemeContext";
-import AdminPage from "./components/AdminPage";
-
+import AdminPage from "./components/admin/AdminPage";
+import { SearchProvider } from "./components/context/SearchContext";
 
 function App() {
   return (
     <>
-    <ThemeProvider>
-      <ToastContainer />
-      <AuthProvider>
-        
-          <Router>
-          <ScrollToTop />
-            <Suspense>
-              <Header />
-            <div className="container" style={{ paddingBottom: "80px" }}>
-              <Routes>
-                <Route path="/" element={<Cards />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/new-card" element={<NewCard />} />
-                <Route path="/my-cards" element={<MyCards />} />
-                <Route path="/favorite-cards" element={<FavoriteCards />} />
-                <Route path="/cards/:id" element={<CardDetails />} />
-               <Route path="/admin" element={<AdminPage />} />
-              </Routes>
-              </div>
-              <Footer />
-            </Suspense>
-          </Router>
-      
-      </AuthProvider>
+      <ThemeProvider>
+        <ToastContainer />
+        <AuthProvider>
+          <SearchProvider>
+            <Router>
+              <ScrollToTop />
+              <Suspense>
+                <Header />
+                <div className="container" style={{ paddingBottom: "80px" }}>
+                  <Routes>
+                    <Route path="/" element={<Cards />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/new-card" element={<NewCard />} />
+                    <Route path="/my-cards" element={<MyCards />} />
+                    <Route path="/favorite-cards" element={<FavoriteCards />} />
+                    <Route path="/cards/:id" element={<CardDetails />} />
+                    <Route path="/admin" element={<AdminPage />} />
+                  </Routes>
+                </div>
+                <Footer />
+              </Suspense>
+            </Router>
+          </SearchProvider>
+        </AuthProvider>
       </ThemeProvider>
     </>
   );

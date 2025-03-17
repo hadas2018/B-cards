@@ -89,8 +89,8 @@ const Footer: FunctionComponent<FooterProps> = () => {
               />
             </svg>
           ),
-          label: "ניהול",
-          title: "אזור ניהול",
+          label: "CRM",
+          title: "management area",
         });
       }
     }
