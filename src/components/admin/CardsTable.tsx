@@ -35,12 +35,12 @@ const CardsTable: React.FC<CardsTableProps> = ({
   };
 
   // מציאת בעל הכרטיס לפי מזהה המשתמש
-  const findCardOwner = (userId: string) => {
-    const owner = users.find((user) => user._id === userId);
-    return owner
-      ? `${owner.name.first} ${owner.name.last}`
-      : "Unknown User";
-  };
+  // const findCardOwner = (userId: string) => {
+  //   const owner = users.find((user) => user._id === userId);
+  //   return owner
+  //     ? `${owner.name.first} ${owner.name.last}`
+  //     : "Unknown User";
+  // };
 
   if (!cards.length) {
     return (

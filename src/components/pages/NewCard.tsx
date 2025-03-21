@@ -1,12 +1,12 @@
 import { FormikValues, useFormik } from "formik";
 import { FunctionComponent, useEffect } from "react";
 import * as yup from "yup";
-import { normalizeCard } from "../utils/cards/NormalizeCard";
-import { UnnormalizedCard } from "../interfaces/cards/UnnormalizedCard";
-import { postNewCard } from "../services/cardsService";
-import { errorMessage, sucessMassage } from "../services/feedbackService";
+import { normalizeCard } from "../../utils/cards/NormalizeCard";
+import { UnnormalizedCard } from "../../interfaces/cards/UnnormalizedCard";
+import { postNewCard } from "../../services/cardsService";
+import { errorMessage, sucessMassage } from "../../services/feedbackService";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 interface NewCardProps {}
 

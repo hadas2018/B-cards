@@ -1,10 +1,10 @@
 import { FormikValues, useFormik } from "formik";
 import { FunctionComponent, useEffect, useState } from "react";
 import * as yup from "yup";
-import { loginUser } from "../services/userService";
-import { errorMessage, sucessMassage } from "../services/feedbackService";
+import { loginUser } from "../../services/userService";
+import { errorMessage, sucessMassage } from "../../services/feedbackService";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 
 interface LoginProps {}

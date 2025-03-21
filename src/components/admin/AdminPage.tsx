@@ -15,11 +15,12 @@ import { useDeleteConfirmation } from "../../hooks/useDeleteConfirmation";
 import { useAuth } from "../context/AuthContext";
 import CardsTable from "./CardsTable";
 import UsersTable from "./UsersTable";
-import DeleteConfirmationModal from "../DeleteConfirmationModal";
+import DeleteConfirmationModal from "../modal/DeleteConfirmationModal";
 import { User } from "../../interfaces/users/User";
 import { Card } from "../../interfaces/cards/Cards";
-import CardEditModal from "./CardEditModal";
-import UserEditModal from "./UserEditModal";
+import CardEditModal from "../modal/CardEditModal";
+import UserEditModal from "../modal/UserEditModal";
+// import { Card, User } from "../../interfaces/types";
 
 const AdminPage = () => {
   // State

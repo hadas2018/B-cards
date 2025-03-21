@@ -3,6 +3,7 @@ import { UserImage } from "./UserImage";
 import { UserName } from "./UserName";
 
 export interface User {
+  _id: string;
   createdAt: number;
   isAdmin: boolean;
   name: UserName;

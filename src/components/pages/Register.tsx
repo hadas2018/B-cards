@@ -1,10 +1,10 @@
 import { FormikValues, useFormik } from "formik";
 import { FunctionComponent } from "react";
 import * as yup from "yup";
-import { normalizeUser } from "../utils/users/normalizeUser";
-import { unnormalizedUser } from "../interfaces/users/UnnormalizedUser";
-import { registerUser } from "../services/userService";
-import { errorMessage, sucessMassage } from "../services/feedbackService";
+import { normalizeUser } from "../../utils/users/normalizeUser";
+import { unnormalizedUser } from "../../interfaces/users/UnnormalizedUser";
+import { registerUser } from "../../services/userService";
+import { errorMessage, sucessMassage } from "../../services/feedbackService";
 
 interface RegisterProps {}
 

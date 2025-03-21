@@ -106,7 +106,6 @@ const ActionButtons: FunctionComponent<ActionButtonsProps> = ({
         </button>
       )}
 
-      {/* כפתורי עריכה ומחיקה - מופרדים כדי לאפשר גמישות */}
       {/* כפתור עריכה - רק למשתמשים בעלים */}
       {isOwner && (displayMode === 'all' || displayMode === 'edit') && (
         <Link

@@ -127,7 +127,7 @@ const Bcard: FunctionComponent<BcardProps> = ({
             handleLikeClick={handleLikeClick}
             formatPhoneNumber={formatPhoneNumber}
             styleClass="action-icon"
-            isOwner={isOwner()}
+            isOwner={isOwner() === true}
             onDelete={onDelete}
             displayMode="all"
           />

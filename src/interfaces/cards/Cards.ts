@@ -7,7 +7,7 @@ export interface Card {
   imageAlt: string | number | readonly string[] | undefined;
   imageUrl: string | number | readonly string[] | undefined;
   fallbackImage: string;
-  _id?: string;
+  _id: string;
   title: string;
   subtitle: string;
   description: string;

@@ -1,13 +1,13 @@
 import { FunctionComponent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getMyCards, deleteCard } from "../services/cardsService";
-import { errorMessage, sucessMassage } from "../services/feedbackService";
-import { Card } from "../interfaces/cards/Cards";
-import { useAuth } from "./context/AuthContext";
-import { useSearch } from "./context/SearchContext";
-import { useDeleteConfirmation } from "../hooks/useDeleteConfirmation";
-import Bcard from "./cards/Bcard";
-import DeleteConfirmationModal from "./DeleteConfirmationModal";
+import { getMyCards, deleteCard } from "../../services/cardsService";
+import { errorMessage, sucessMassage } from "../../services/feedbackService";
+import { Card } from "../../interfaces/cards/Cards";
+import { useAuth } from "../context/AuthContext";
+import { useSearch } from "../context/SearchContext";
+import { useDeleteConfirmation } from "../../hooks/useDeleteConfirmation";
+import Bcard from "../cards/Bcard";
+import DeleteConfirmationModal from "../modal/DeleteConfirmationModal";
 
 interface MyCardsProps {}
 

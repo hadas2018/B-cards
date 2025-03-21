@@ -326,7 +326,7 @@ const Header: FunctionComponent<HeaderProps> = () => {
       )}
 
       {/* CSS for hamburger animation */}
-      <style jsx="true">{`
+      <style>{`
         .hamburger-icon {
           width: 30px;
           height: 24px;

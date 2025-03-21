@@ -1,13 +1,13 @@
 import { FunctionComponent, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getFavoriteCards, deleteCard } from "../services/cardsService";
-import { errorMessage, sucessMassage } from "../services/feedbackService";
-import { Card } from "../interfaces/cards/Cards";
-import { useAuth } from "./context/AuthContext";
-import { useSearch } from "./context/SearchContext";
-import { useDeleteConfirmation } from "../hooks/useDeleteConfirmation"; // ייבוא ההוק
-import Bcard from "./cards/Bcard";
-import DeleteConfirmationModal from "./DeleteConfirmationModal"; // ייבוא קומפוננטת המודל
+import { getFavoriteCards, deleteCard } from "../../services/cardsService";
+import { errorMessage, sucessMassage } from "../../services/feedbackService";
+import { Card } from "../../interfaces/cards/Cards";
+import { useAuth } from "../context/AuthContext";
+import { useSearch } from "../context/SearchContext";
+import { useDeleteConfirmation } from "../../hooks/useDeleteConfirmation"; // ייבוא ההוק
+import Bcard from "../cards/Bcard";
+import DeleteConfirmationModal from "../modal/DeleteConfirmationModal"; // ייבוא קומפוננטת המודל
 
 interface FavoriteCardsProps {}
 
@@ -95,7 +95,9 @@ const FavoriteCards: FunctionComponent<FavoriteCardsProps> = () => {
 
     try {
       const res = await getFavoriteCards(true);
-      setCards(res.data);
+      if (res.data) {
+        setCards(res.data);
+      }
     } catch (err) {
       console.error("שגיאה בטעינת הכרטיסים המועדפים:", err);
       setError("אירעה שגיאה בטעינת הכרטיסים המועדפים");
@@ -228,7 +230,8 @@ const FavoriteCards: FunctionComponent<FavoriteCardsProps> = () => {
           <div className="col-md-4 col-sm-6 mb-4" key={card._id}>
             <Bcard
               card={card}
-              isMyCard={user && user._id === card.user_id}
+              // isMyCard={user && user._id === card.user_id}
+              isMyCard={Boolean(user && user._id === card.user_id)}
               onLikeChange={handleLikeChange}
               onDelete={(id) => handleDeleteClick(id, "card")} // שימוש בפונקציה מההוק
               refreshCards={() => loadFavoriteCards(true)}

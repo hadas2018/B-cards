@@ -10,7 +10,7 @@ import { useAuth } from "../context/AuthContext";
 import { useSearch } from "../context/SearchContext";
 import { useDeleteConfirmation } from "../../hooks/useDeleteConfirmation"; // ייבוא ההוק
 import Bcard from "./Bcard";
-import DeleteConfirmationModal from "../DeleteConfirmationModal";
+import DeleteConfirmationModal from "../modal/DeleteConfirmationModal";
 // import DeleteConfirmationModal from "../DeleteConfirmationModal"; // ייבוא קומפוננטת המודל
 
 interface CardsProps {}
@@ -99,7 +99,7 @@ const Cards: FunctionComponent<CardsProps> = () => {
 
     try {
       const res = await getAllCards(silent);
-      setCards(res.data);
+      setCards(res.data || []);
       // כאן לא מגדירים את filteredCards, כי useEffect ידאג לכך
     } catch (err) {
       console.error("שגיאה בטעינת הכרטיסים:", err);
@@ -197,7 +197,8 @@ const Cards: FunctionComponent<CardsProps> = () => {
           <div className="col-md-4 col-sm-6 mb-4" key={card._id}>
             <Bcard
               card={card}
-              isMyCard={user && user._id === card.user_id}
+              // isMyCard={user && user._id === card.user_id}
+              isMyCard={Boolean(user && user._id === card.user_id)}
               onDelete={(id) => handleDeleteClick(id, "card")} // שימוש בפונקציה מההוק
               refreshCards={() => loadCards(true)}
             />
