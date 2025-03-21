@@ -157,7 +157,7 @@ const Header: FunctionComponent<HeaderProps> = () => {
                   to="/About"
                   onClick={() => setNavbarOpen(false)}
                 >
-                  אודות
+                  About
                 </Link>
               </li>
 
@@ -170,7 +170,7 @@ const Header: FunctionComponent<HeaderProps> = () => {
                       to="/my-cards"
                       onClick={() => setNavbarOpen(false)}
                     >
-                      הכרטיסים שלי
+                      My-Cards
                     </Link>
                   </li>
                   <li className="nav-item">
@@ -179,7 +179,7 @@ const Header: FunctionComponent<HeaderProps> = () => {
                       to="/favorite-cards"
                       onClick={() => setNavbarOpen(false)}
                     >
-                      כרטיסים מועדפים
+                      Favorites
                     </Link>
                   </li>
                 </>
@@ -245,12 +245,12 @@ const Header: FunctionComponent<HeaderProps> = () => {
                       />
                     </Link>
                   )}
-                  <span className="me-3">שלום {getDisplayName()}</span>
+                  <span className="me-3">Hello {getDisplayName()}</span>
                   {user?.isAdmin && (
-                    <span className="badge bg-info me-2">מנהל</span>
+                    <span className="badge bg-info me-2">admin</span>
                   )}
                   {user?.isBusiness && (
-                    <span className="badge bg-success me-2">עסקי</span>
+                    <span className="badge bg-success me-2">business</span>
                   )}
                   <button
                     className="btn btn-outline-danger"
@@ -259,7 +259,7 @@ const Header: FunctionComponent<HeaderProps> = () => {
                       setNavbarOpen(false);
                     }}
                   >
-                    התנתק
+                    Logout
                   </button>
                 </div>
               ) : (
@@ -269,7 +269,7 @@ const Header: FunctionComponent<HeaderProps> = () => {
                     className="btn btn-outline-primary"
                     onClick={() => setNavbarOpen(false)}
                   >
-                    Lgin
+                    Login
                   </Link>
                 </div>
               )}
@@ -301,7 +301,7 @@ const Header: FunctionComponent<HeaderProps> = () => {
             }}
             onMouseEnter={() => setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}
-            aria-label="הוסף כרטיס חדש"
+            aria-label="Create a new card"
           >
             +
           </Link>
@@ -319,7 +319,7 @@ const Header: FunctionComponent<HeaderProps> = () => {
                 opacity: showTooltip ? 1 : 0,
               }}
             >
-              הוסף כרטיס חדש
+              Create a new card
             </div>
           )}
         </div>
