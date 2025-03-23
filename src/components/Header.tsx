@@ -16,7 +16,7 @@ const Header: FunctionComponent<HeaderProps> = () => {
   const [showSearch, setShowSearch] = useState(false); // מצב חדש לתצוגת החיפוש במובייל
   const location = useLocation(); // לבדיקת המיקום הנוכחי
 
-  // הפעלת החיפוש רק בדפים מסוימים (למשל: דף הבית, הכרטיסים שלי, מועדפים)
+  // הפעלת החיפוש רק בדפים מסוימים 
   const isSearchablePage = () => {
     return ["/", "/my-cards", "/favorite-cards", "/admin"].includes(
       location.pathname
@@ -227,7 +227,7 @@ const Header: FunctionComponent<HeaderProps> = () => {
                     // </Link>
                     <Link
                       className="nav-link"
-                      to="/my-cards"
+                      to="/profile"
                       onClick={() => setNavbarOpen(false)}
                     >
                       <img

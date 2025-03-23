@@ -1,28 +1,12 @@
-// import { unnormalizedUser } from "../../interfaces/users/UnnormalizedUser";
-// import { User } from "../../interfaces/users/User";
-
-// export function normalizeUser(values: unnormalizedUser): User {
-//   return {
-
-
-
-
-    export const normalizeUser = (values: any) => {
-      return {
-        _id: values._id || "", // אם אין _id, השתמש במחרוזת ריקה
-        createdAt: values.createdAt || Date.now(), // אם אין createdAt, השתמש בזמן הנוכחי
-        isAdmin: values.isAdmin || false, // אם אין isAdmin, השתמש בfalse
-        name: {
-          first: values.first,
-          middle: values.middle,
-          last: values.last,
-        },
-   
-    // name: {
-    //   first: values.first,
-    //   middle: values.middle,
-    //   last: values.last,
-    // },
+export const normalizeUser = (values: any) => {
+  return {
+    // הסרנו את ה-_id מכאן
+    // createdAt רק אם הוא כבר קיים, לא צריך להוסיף בעדכון
+    name: {
+      first: values.first,
+      middle: values.middle,
+      last: values.last,
+    },
     phone: values.phone,
     email: values.email,
     password: values.password,
@@ -39,6 +23,5 @@
       zip: values.zip,
     },
     isBusiness: values.isBusiness,
-    
   };
-}
+};

@@ -134,8 +134,45 @@ export function postNewCard(card: Omit<Card, "_id">) {
 }
 
 // עדכן כרטיס קיים
+// export function updateCard(id: string, card: Omit<Card, "_id">) {
+//   return axios.put<Card>(`${API}/${id}`, card)
+//     .then(response => {
+//       clearAllCaches(); // נקה את כל המטמונים
+//       dispatchCardsUpdated(); // הפץ אירוע עדכון
+//       return response;
+//     });
+// }
+
+
+// עדכן כרטיס קיים
 export function updateCard(id: string, card: Omit<Card, "_id">) {
-  return axios.put<Card>(`${API}/${id}`, card)
+  // יצירת עותק של הכרטיס כדי לא לשנות את האובייקט המקורי
+  const cardToUpdate = { ...card };
+  
+  // הסרת שדות שאסור לעדכן
+  if ('_id' in cardToUpdate) {
+    delete cardToUpdate._id;
+  }
+  
+  if ('likes' in cardToUpdate) {
+    delete cardToUpdate.likes;
+  }
+  
+  if ('user_id' in cardToUpdate) {
+    delete cardToUpdate.user_id;
+  }
+  
+  if ('bizNumber' in cardToUpdate) {
+    delete cardToUpdate.bizNumber;
+  }
+  
+  console.log("Sending to server:", cardToUpdate);
+  
+  return axios.put<Card>(`${API}/${id}`, cardToUpdate, {
+    headers: {
+      "x-auth-token": sessionStorage.getItem("token"),
+    },
+  })
     .then(response => {
       clearAllCaches(); // נקה את כל המטמונים
       dispatchCardsUpdated(); // הפץ אירוע עדכון

@@ -20,6 +20,7 @@ import { User } from "../../interfaces/users/User";
 import { Card } from "../../interfaces/cards/Cards";
 import CardEditModal from "../modal/CardEditModal";
 import UserEditModal from "../modal/UserEditModal";
+
 // import { Card, User } from "../../interfaces/types";
 
 const AdminPage = () => {

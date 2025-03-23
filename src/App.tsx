@@ -19,6 +19,9 @@ import ScrollToTop from "./components/ScrollToTop";
 import { ThemeProvider } from "./components/context/ThemeContext";
 import AdminPage from "./components/admin/AdminPage";
 import { SearchProvider } from "./components/context/SearchContext";
+import EditUser from "./components/EditUser";
+import Profile from "./components/Profile";
+import EditCardPage from "./components/EditCardPage";
 
 function App() {
   return (
@@ -42,6 +45,12 @@ function App() {
                     <Route path="/favorite-cards" element={<FavoriteCards />} />
                     <Route path="/cards/:id" element={<CardDetails />} />
                     <Route path="/admin" element={<AdminPage />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route
+                      path="/edit-user/:id"
+                      element={<EditUser />}
+                    />
+                     <Route path="/edit-card/:id" element={<EditCardPage />} />
                   </Routes>
                 </div>
                 <Footer />

@@ -21,3 +21,33 @@ export function getUserById(id: string) {
     },
   });
 }
+
+// update user - ensure complete objects
+export function updateUser(id: string, updatedUser: any) {
+  // Create a copy to avoid modifying the original object
+  const userToSend = { ...updatedUser };
+  
+  // Remove fields that are not allowed to be updated
+  if ('_id' in userToSend) {
+    delete userToSend._id;
+  }
+  
+  // Remove email as the server doesn't allow updating it
+  if ('email' in userToSend) {
+    delete userToSend.email;
+  }
+  
+  // Remove isBusiness as it's not allowed to be updated this way
+  if ('isBusiness' in userToSend) {
+    delete userToSend.isBusiness;
+  }
+  
+  // Log what we're sending to help with debugging
+  console.log("Fields being sent to server:", userToSend);
+  
+  return axios.put(`${API}/${id}`, userToSend, {
+    headers: {
+      "x-auth-token": sessionStorage.getItem("token"),
+    },
+  });
+}
