@@ -5,9 +5,9 @@ import { errorMessage, sucessMassage } from "../../services/feedbackService";
 import { Card } from "../../interfaces/cards/Cards";
 import { useAuth } from "../context/AuthContext";
 import { useSearch } from "../context/SearchContext";
-import { useDeleteConfirmation } from "../../hooks/useDeleteConfirmation"; // ייבוא ההוק
+import { useDeleteConfirmation } from "../../hooks/useDeleteConfirmation"; // Import the hook
 import Bcard from "../cards/Bcard";
-import DeleteConfirmationModal from "../modal/DeleteConfirmationModal"; // ייבוא קומפוננטת המודל
+import DeleteConfirmationModal from "../modal/DeleteConfirmationModal"; // Import modal component
 
 interface FavoriteCardsProps {}
 
@@ -21,38 +21,38 @@ const FavoriteCards: FunctionComponent<FavoriteCardsProps> = () => {
   const { searchTerm } = useSearch();
   const navigate = useNavigate();
 
-  // פונקציית המחיקה עצמה שתועבר להוק
+  // The delete function that will be passed to the hook
   const deleteHandler = async (id: string, type: "card" | "user" | "item") => {
     try {
       if (type === "card") {
-        // בדיקת הרשאות מחיקה
+        // Check delete permissions
         const card = cards.find((c) => c._id === id);
-        if (!card) throw new Error("הכרטיס לא נמצא");
+        if (!card) throw new Error("Card not found");
 
-        // בדיקה שהמשתמש הוא בעל הכרטיס או מנהל
+        // Check if the user is the card owner or admin
         if (user && (user._id === card.user_id || user.isAdmin)) {
           await deleteCard(id);
           setCards((prev) => prev.filter((c) => c._id !== id));
-          sucessMassage("הכרטיס נמחק בהצלחה");
+          sucessMassage("Card deleted successfully");
         } else {
-          errorMessage("אין לך הרשאה למחוק כרטיס זה");
-          throw new Error("אין הרשאות מחיקה");
+          errorMessage("You don't have permission to delete this card");
+          throw new Error("No delete permissions");
         }
       }
     } catch (err) {
-      console.error("שגיאה במחיקת הכרטיס:", err);
-      errorMessage("אירעה שגיאה במחיקת הכרטיס");
+      console.error("Error deleting card:", err);
+      errorMessage("An error occurred while deleting the card");
       throw err;
     }
   };
 
-  // שימוש בהוק המשודרג
+  // Using the enhanced hook
   const { handleDeleteClick, deleteModalProps } =
     useDeleteConfirmation(deleteHandler);
 
   useEffect(() => {
     if (!isLoggedIn) {
-      errorMessage("עליך להתחבר כדי לצפות בכרטיסים המועדפים");
+      errorMessage("You must be logged in to view favorite cards");
       navigate("/login");
       return;
     }
@@ -60,7 +60,7 @@ const FavoriteCards: FunctionComponent<FavoriteCardsProps> = () => {
     loadFavoriteCards();
   }, [isLoggedIn, navigate]);
 
-  // סינון הכרטיסים לפי מושג החיפוש
+  // Filter cards by search term
   useEffect(() => {
     if (!searchTerm.trim()) {
       setFilteredCards(cards);
@@ -99,18 +99,18 @@ const FavoriteCards: FunctionComponent<FavoriteCardsProps> = () => {
         setCards(res.data);
       }
     } catch (err) {
-      console.error("שגיאה בטעינת הכרטיסים המועדפים:", err);
-      setError("אירעה שגיאה בטעינת הכרטיסים המועדפים");
-      errorMessage("אירעה שגיאה בטעינת הכרטיסים המועדפים");
+      console.error("Error loading favorite cards:", err);
+      setError("An error occurred while loading favorite cards");
+      errorMessage("An error occurred while loading favorite cards");
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
   };
 
-  // כשמשתמש מסיר לייק, הכרטיס צריך להיעלם מהרשימה
+  // When a user removes a like, the card should disappear from the list
   const handleLikeChange = () => {
-    // פשוט טוען מחדש את כל הכרטיסים המועדפים
+    // Simply reload all favorite cards
     loadFavoriteCards(true);
   };
 
@@ -118,7 +118,7 @@ const FavoriteCards: FunctionComponent<FavoriteCardsProps> = () => {
     return (
       <div className="d-flex justify-content-center my-5">
         <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">טוען...</span>
+          <span className="visually-hidden">Loading...</span>
         </div>
       </div>
     );
@@ -127,7 +127,7 @@ const FavoriteCards: FunctionComponent<FavoriteCardsProps> = () => {
   if (error) {
     return (
       <div className="alert alert-danger my-5" role="alert">
-        <h4 className="alert-heading">שגיאה בטעינת הנתונים</h4>
+        <h4 className="alert-heading">Error Loading Data</h4>
         <p>{error}</p>
         <hr />
         <div className="d-flex justify-content-between">
@@ -135,10 +135,10 @@ const FavoriteCards: FunctionComponent<FavoriteCardsProps> = () => {
             onClick={() => loadFavoriteCards(true)}
             className="btn btn-outline-danger"
           >
-            נסה שוב
+            Try Again
           </button>
           <Link to="/" className="btn btn-primary">
-            חזור לדף הבית
+            Back to Home
           </Link>
         </div>
       </div>
@@ -148,18 +148,18 @@ const FavoriteCards: FunctionComponent<FavoriteCardsProps> = () => {
   if (cards.length === 0) {
     return (
       <div className="text-center my-5">
-        <h2>אין כרטיסים מועדפים</h2>
-        <p>לא סימנת שום כרטיס כמועדף עדיין.</p>
-        <p>תוכל לסמן כרטיסים כמועדפים בלחיצה על אייקון הלב בכרטיסים.</p>
+        <h2>No Favorite Cards</h2>
+        <p>You haven't marked any cards as favorites yet.</p>
+        <p>You can mark cards as favorites by clicking the heart icon on cards.</p>
         <div className="mt-4">
           <Link to="/" className="btn btn-primary mx-2">
-            חזור לדף הבית וגלה כרטיסים
+            Back to Home and Discover Cards
           </Link>
           <button
             onClick={() => loadFavoriteCards(true)}
             className="btn btn-outline-secondary mx-2"
           >
-            רענן רשימה
+            Refresh List
           </button>
         </div>
       </div>
@@ -169,7 +169,7 @@ const FavoriteCards: FunctionComponent<FavoriteCardsProps> = () => {
   return (
     <div className="container mt-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1>הכרטיסים המועדפים שלי</h1>
+        <h1>My Favorite Cards</h1>
         <div>
           <button
             onClick={() => loadFavoriteCards(true)}
@@ -183,7 +183,7 @@ const FavoriteCards: FunctionComponent<FavoriteCardsProps> = () => {
                   role="status"
                   aria-hidden="true"
                 ></span>
-                מרענן...
+                Refreshing...
               </>
             ) : (
               <>
@@ -200,28 +200,28 @@ const FavoriteCards: FunctionComponent<FavoriteCardsProps> = () => {
                   />
                   <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z" />
                 </svg>
-                רענן רשימה
+                Refresh List
               </>
             )}
           </button>
           <Link to="/" className="btn btn-primary">
-            חזור לדף הבית
+            Back to Home
           </Link>
         </div>
       </div>
 
-      {/* הצגת הודעה כאשר מסננים ואין תוצאות */}
+      {/* Display message when filtering with no results */}
       {searchTerm && filteredCards.length === 0 && (
         <div className="alert alert-info">
-          <h5>לא נמצאו תוצאות לחיפוש "{searchTerm}"</h5>
-          <p className="mb-0">נסה לחפש עם מילות מפתח אחרות או בדוק את האיות</p>
+          <h5>No results found for "{searchTerm}"</h5>
+          <p className="mb-0">Try searching with different keywords or check the spelling</p>
         </div>
       )}
 
-      {/* הצגת מספר התוצאות כאשר מסננים ויש תוצאות */}
+      {/* Display number of results when filtering with results */}
       {searchTerm && filteredCards.length > 0 && (
         <div className="alert alert-info mb-4">
-          נמצאו {filteredCards.length} תוצאות לחיפוש "{searchTerm}"
+          Found {filteredCards.length} results for "{searchTerm}"
         </div>
       )}
 
@@ -233,14 +233,14 @@ const FavoriteCards: FunctionComponent<FavoriteCardsProps> = () => {
               // isMyCard={user && user._id === card.user_id}
               isMyCard={Boolean(user && user._id === card.user_id)}
               onLikeChange={handleLikeChange}
-              onDelete={(id) => handleDeleteClick(id, "card")} // שימוש בפונקציה מההוק
+              onDelete={(id) => handleDeleteClick(id, "card")} // Using the function from the hook
               refreshCards={() => loadFavoriteCards(true)}
             />
           </div>
         ))}
       </div>
 
-      {/* מודל אישור המחיקה */}
+      {/* Delete confirmation modal */}
       <DeleteConfirmationModal {...deleteModalProps} />
     </div>
   );

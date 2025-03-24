@@ -18,37 +18,37 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
   const { user, isLoggedIn } = useAuth();
   const { searchTerm } = useSearch();
 
-  // פונקציית המחיקה עצמה שתועבר להוק
+  // The delete function that will be passed to the hook
   const deleteHandler = async (id: string, type: "card" | "user" | "item") => {
     try {
       if (type === "card") {
         await deleteCard(id);
         setCards((prev) => prev.filter((card) => card._id !== id));
-        sucessMassage("הכרטיס נמחק בהצלחה");
+        sucessMassage("Card deleted successfully");
       }
     } catch (err) {
-      console.error("שגיאה במחיקת הכרטיס:", err);
-      errorMessage("אירעה שגיאה במחיקת הכרטיס");
-      throw err; // להעביר את השגיאה להוק לטיפול
+      console.error("Error deleting card:", err);
+      errorMessage("An error occurred while deleting the card");
+      throw err; // Pass the error to the hook for handling
     }
   };
 
-  // שימוש בהוק המשודרג
+  // Using the enhanced hook
   const { handleDeleteClick, deleteModalProps } =
     useDeleteConfirmation(deleteHandler);
 
   useEffect(() => {
-    // וודא שהמשתמש מחובר
+    // Make sure the user is logged in
     if (!isLoggedIn || !user) {
-      errorMessage("עליך להתחבר כדי לצפות בכרטיסים שלך");
+      errorMessage("You must be logged in to view your cards");
       return;
     }
 
-    // טען את הכרטיסים של המשתמש
+    // Load the user's cards
     loadCards();
   }, [isLoggedIn, user]);
 
-  // סינון הכרטיסים לפי מושג החיפוש
+  // Filter cards by search term
   useEffect(() => {
     if (!searchTerm.trim()) {
       setFilteredCards(cards);
@@ -79,8 +79,8 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
         setCards(res.data);
       })
       .catch((err) => {
-        console.error("שגיאה בטעינת הכרטיסים:", err);
-        errorMessage("אירעה שגיאה בטעינת הכרטיסים");
+        console.error("Error loading cards:", err);
+        errorMessage("An error occurred while loading cards");
       })
       .finally(() => {
         setLoading(false);
@@ -91,7 +91,7 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
     return (
       <div className="d-flex justify-content-center my-5">
         <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">טוען...</span>
+          <span className="visually-hidden">Loading...</span>
         </div>
       </div>
     );
@@ -100,10 +100,10 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
   if (!isLoggedIn || !user) {
     return (
       <div className="text-center my-5">
-        <h2>אינך מחובר</h2>
-        <p>עליך להתחבר כדי לצפות בכרטיסים שלך</p>
+        <h2>Not Logged In</h2>
+        <p>You must be logged in to view your cards</p>
         <Link to="/login" className="btn btn-primary">
-          התחברות
+          Login
         </Link>
       </div>
     );
@@ -112,12 +112,12 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
   if (cards.length === 0) {
     return (
       <div className="text-center my-5">
-        <h2>אין לך כרטיסים</h2>
+        <h2>You have no cards</h2>
         {(user.isBusiness || user.isAdmin) && (
           <div className="mt-3">
-            <p>רוצה ליצור כרטיס עסק חדש?</p>
+            <p>Want to create a new business card?</p>
             <Link to="/new-card" className="btn btn-primary">
-              יצירת כרטיס חדש
+              Create New Card
             </Link>
           </div>
         )}
@@ -127,20 +127,20 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 
   return (
     <div className="container mt-4">
-      <h1 className="mb-4">הכרטיסים שלי</h1>
+      <h1 className="mb-4">My Cards</h1>
 
-      {/* הצגת הודעה כאשר מסננים ואין תוצאות */}
+      {/* Display message when filtering with no results */}
       {searchTerm && filteredCards.length === 0 && (
         <div className="alert alert-info">
-          <h5>לא נמצאו תוצאות לחיפוש "{searchTerm}"</h5>
-          <p className="mb-0">נסה לחפש עם מילות מפתח אחרות או בדוק את האיות</p>
+          <h5>No results found for "{searchTerm}"</h5>
+          <p className="mb-0">Try searching with different keywords or check the spelling</p>
         </div>
       )}
 
-      {/* הצגת מספר התוצאות כאשר מסננים ויש תוצאות */}
+      {/* Display number of results when filtering with results */}
       {searchTerm && filteredCards.length > 0 && (
         <p className="alert alert-info mb-4">
-          נמצאו {filteredCards.length} תוצאות לחיפוש "{searchTerm}"
+          Found {filteredCards.length} results for "{searchTerm}"
         </p>
       )}
 
@@ -156,7 +156,7 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
         ))}
       </div>
 
-      {/* מודל אישור המחיקה */}
+      {/* Delete confirmation modal */}
       <DeleteConfirmationModal {...deleteModalProps} />
     </div>
   );

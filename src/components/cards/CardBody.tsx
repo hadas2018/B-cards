@@ -27,13 +27,8 @@ const CardBody: FunctionComponent<CardBodyProps> = ({
 
   return (
     <div className="card-body">
-      <div className="d-flex justify-content-between align-items-start mb-3">
-        <div>
-          <h1 className="card-title display-5 fw-bold">{card.title}</h1>
-          <h3 className="card-subtitle text-muted">{card.subtitle}</h3>
-        </div>
-
-        {/* שימוש בקומפוננטת ActionButtons במצב בסיסי */}
+      {/* כפתורי פעולה בשורה נפרדת מעל הכותרת */}
+      <div className="d-flex justify-content-end mb-3">
         <ActionButtons
           card={card}
           isLoggedIn={isLoggedIn}
@@ -43,14 +38,20 @@ const CardBody: FunctionComponent<CardBodyProps> = ({
           styleClass="rounded-circle p-2"
           iconSize={24}
           isOwner={isOwner}
-          onDelete={handleDeleteCard} // העברת פונקציית המחיקה הריקה
-          displayMode="basic" // שינוי מצב התצוגה כדי שלא יהיו כפתורי עריכה/מחיקה
+          onDelete={handleDeleteCard}
+          displayMode="basic"
         />
+      </div>
+
+      {/* כותרת וכותרת משנה בשורה נפרדת */}
+      <div className="mb-3">
+        <h1 className="card-title display-5 fw-bold">{card.title}</h1>
+        <h3 className="card-subtitle text-muted">{card.subtitle}</h3>
       </div>
 
       {/* תיאור */}
       <div className="mb-4">
-        <h4 className="mb-2">תיאור העסק</h4>
+        <h4 className="mb-2">Business description</h4>
         <p className="lead">{card.description}</p>
       </div>
 
@@ -59,7 +60,7 @@ const CardBody: FunctionComponent<CardBodyProps> = ({
       {/* פרטי קשר */}
       <div className="row mb-4">
         <div className="col-md-6">
-          <h4 className="mb-3">פרטי קשר</h4>
+          <h4 className="mb-3">Contact details</h4>
           <ul className="list-group list-group-flush">
             <li className="list-group-item d-flex align-items-center">
               <svg
@@ -90,32 +91,38 @@ const CardBody: FunctionComponent<CardBodyProps> = ({
               <span>{card.email}</span>
             </li>
             {card.web && (
-              <li className="list-group-item d-flex align-items-center">
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 256 256"
-                  className="me-3 text-primary"
-                >
-                  <path
-                    d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216ZM173.66,82.34a56,56,0,0,0-91.32,0,8,8,0,1,0,13.32,8.92,40,40,0,0,1,64.68,0,8,8,0,0,0,13.32-8.92ZM128,120a16,16,0,1,0,16,16A16,16,0,0,0,128,120Z"
-                    fill="currentColor"
-                  />
-                </svg>
-                <a
-                  href={card.web}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {card.web}
-                </a>
+              <li className="list-group-item">
+                <div className="d-flex align-items-start">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 256 256"
+                    className="me-3 text-primary flex-shrink-0 mt-1"
+                  >
+                    <path
+                      d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216ZM173.66,82.34a56,56,0,0,0-91.32,0,8,8,0,1,0,13.32,8.92,40,40,0,0,1,64.68,0,8,8,0,0,0,13.32-8.92ZM128,120a16,16,0,1,0,16,16A16,16,0,0,0,128,120Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                  <a
+                    href={card.web}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      wordBreak: "break-word",
+                      overflowWrap: "break-word",
+                    }}
+                  >
+                    {card.web}
+                  </a>
+                </div>
               </li>
             )}
           </ul>
         </div>
 
         <div className="col-md-6">
-          <h4 className="mb-3">כתובת</h4>
+          <h4 className="mb-3">address</h4>
           <address className="mb-0">
             <div className="d-flex align-items-center mb-2">
               <svg
@@ -131,13 +138,9 @@ const CardBody: FunctionComponent<CardBodyProps> = ({
               </svg>
               <div>
                 <div>
-                  {card.address.street}{" "}
-                  {card.address.houseNumber}
+                  {card.address.street} {card.address.houseNumber}
                 </div>
-                <div>
-                  {card.address.city}
-                  {/* {card.address.state} */}
-                </div>
+                <div>{card.address.city}</div>
                 <div>{card.address.country}</div>
               </div>
             </div>

@@ -8,10 +8,6 @@ import CardHeader from "./CardHeader";
 import CardBody from "./CardBody";
 import CardLocation from "./CardLocation";
 
-// תמונת placeholder קבועה
-const PLACEHOLDER_IMAGE =
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400' viewBox='0 0 800 400'%3E%3Crect width='800' height='400' fill='%23f0f0f0'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='24' font-weight='bold' fill='%23555555'%3E%D7%AA%D7%9E%D7%95%D7%A0%D7%94 %D7%9C%D7%90 %D7%96%D7%9E%D7%99%D7%A0%D7%94%3C/text%3E%3C/svg%3E";
-
 interface CardDetailsProps {}
 
 const CardDetails: FunctionComponent<CardDetailsProps> = () => {
@@ -46,7 +42,7 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
 
   const handleLikeClick = async () => {
     if (!isLoggedIn || !card) {
-      errorMessage("עליך להתחבר כדי לסמן לייק");
+      errorMessage("You must be logged in to like!");
       return;
     }
 
@@ -54,8 +50,8 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
       await toggleCardLike(card._id);
       setIsLiked(!isLiked);
     } catch (error) {
-      console.error("שגיאה בהוספת/הסרת לייק:", error);
-      errorMessage("אירעה שגיאה בסימון הלייק");
+      console.error("Error adding/removing like:", error);
+      errorMessage("An error occurred while marking the like!");
     }
   };
 
@@ -75,14 +71,14 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
     return (
       <div className="d-flex justify-content-center mt-5">
         <div className="spinner-border" role="status">
-          <span className="visually-hidden">טוען...</span>
+          <span className="visually-hidden">loading...</span>
         </div>
       </div>
     );
   }
 
   if (!card) {
-    return <div className="alert alert-danger">הכרטיס לא נמצא</div>;
+    return <div className="alert alert-danger">The card was not found!</div>;
   }
 
   return (
@@ -91,7 +87,7 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
         <div className="col-lg-8">
           {/* כרטיס המידע העיקרי */}
           <div className="card shadow-lg rounded-3 mb-4">
-            <CardHeader card={card} placeholderImage={PLACEHOLDER_IMAGE} />
+            <CardHeader card={card} />
             <CardBody
               card={card}
               isLoggedIn={isLoggedIn}
@@ -116,7 +112,7 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
                 fill="currentColor"
               />
             </svg>
-            חזרה לדף הבית
+            Back to home page
           </button>
         </div>
       </div>

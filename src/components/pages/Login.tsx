@@ -136,7 +136,7 @@ const Login: FunctionComponent<LoginProps> = () => {
         </form>
         
         <div className="mt-3 text-center">
-          <p>אין לך חשבון? <a href="/register">הירשם כאן</a></p>
+          <p>Don't have an account? <a href="/register">Register here </a></p>
         </div>
       </div>
     </>

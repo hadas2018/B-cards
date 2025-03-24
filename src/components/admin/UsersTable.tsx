@@ -1,22 +1,15 @@
-// src/components/admin/UsersTable.tsx
-import React, { useState } from "react";
+// import React, { FunctionComponent, useState } from "react";
+import { FunctionComponent, useState } from "react";
 import { User } from "../../interfaces/users/User";
 import Pagination from "../Pagination";
 
-
 interface UsersTableProps {
   users: User[];
-  onToggleRole: (userId: string, role: "admin" | "business") => void;
   onEditUser: (user: User) => void;
   onDeleteUser: (userId: string) => void;
 }
 
-const UsersTable: React.FC<UsersTableProps> = ({
-  users,
-  onToggleRole,
-  onEditUser,
-  onDeleteUser,
-}) => {
+const UsersTable: FunctionComponent<UsersTableProps> = ({ users, onEditUser, onDeleteUser }) => {
   // פאגינציה
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -38,7 +31,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
   if (!users.length) {
     return (
       <div className="alert alert-info text-center">
-        לא נמצאו משתמשים להצגה
+        No users found!
       </div>
     );
   }

@@ -1,18 +1,19 @@
-import React, { useState } from "react";
+// import React, { FunctionComponent, useState } from "react";
+import { FunctionComponent, useState } from "react";
 import { Card } from "../../interfaces/cards/Cards";
-import { User } from "../../interfaces/users/User";
+// import { User } from "../../interfaces/users/User";
 import Pagination from "../Pagination"; 
 
 interface CardsTableProps {
   cards: Card[];
-  users: User[];
+  // users: User[];
   onEditCard: (card: Card) => void;
   onDeleteCard: (cardId: string) => void;
 }
 
-const CardsTable: React.FC<CardsTableProps> = ({
+const CardsTable: FunctionComponent<CardsTableProps> = ({
   cards,
-  users,
+  // users,
   onEditCard,
   onDeleteCard,
 }) => {
@@ -34,18 +35,10 @@ const CardsTable: React.FC<CardsTableProps> = ({
     setCurrentPage(page);
   };
 
-  // מציאת בעל הכרטיס לפי מזהה המשתמש
-  // const findCardOwner = (userId: string) => {
-  //   const owner = users.find((user) => user._id === userId);
-  //   return owner
-  //     ? `${owner.name.first} ${owner.name.last}`
-  //     : "Unknown User";
-  // };
-
   if (!cards.length) {
     return (
       <div className="alert alert-info text-center">
-        לא נמצאו כרטיסים להצגה
+        No cards found!
       </div>
     );
   }

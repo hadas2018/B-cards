@@ -14,18 +14,18 @@ const NewCard: FunctionComponent<NewCardProps> = () => {
   let navigate = useNavigate();
   const { user, isLoggedIn } = useAuth();
   
-  // בדיקת הרשאות
+  // Permission check
   useEffect(() => {
-    // אם המשתמש לא מחובר, נתב לדף התחברות
+    // If user is not logged in, redirect to login page
     if (!isLoggedIn) {
-      errorMessage("עליך להתחבר כדי להוסיף כרטיס חדש");
+      errorMessage("You must be logged in to add a new card");
       navigate("/login");
       return;
     }
     
-    // אם המשתמש לא מסוג עסקי ולא מנהל, נתב לדף הבית עם הודעת שגיאה
+    // If user is not a business user or admin, redirect to home page with error message
     if (user && !user.isAdmin && !user.isBusiness) {
-      errorMessage("אין לך הרשאות להוסיף כרטיס חדש");
+      errorMessage("You don't have permission to add a new card");
       navigate("/");
     }
   }, [isLoggedIn, user, navigate]);
@@ -63,9 +63,9 @@ const NewCard: FunctionComponent<NewCardProps> = () => {
       zip: yup.number().required(),
     }),
     onSubmit: (values, { resetForm }) => {
-      // בדיקה שוב לפני השליחה
+      // Check again before submission
       if (!isLoggedIn || (user && !user.isAdmin && !user.isBusiness)) {
-        errorMessage("אין לך הרשאות להוסיף כרטיס חדש");
+        errorMessage("You don't have permission to add a new card");
         return;
       }
       
@@ -73,26 +73,26 @@ const NewCard: FunctionComponent<NewCardProps> = () => {
       postNewCard(normalizedCard)
         .then((res) => {
           console.log(res);
-          sucessMassage(`הכרטיס נוצר בהצלחה!`);
+          sucessMassage(`Card created successfully!`);
           navigate("/");
         })
         .catch((err) => {
           console.log(err);
-          errorMessage(err.response?.data || "אירעה שגיאה ביצירת הכרטיס");
+          errorMessage(err.response?.data || "An error occurred while creating the card");
         });
 
       resetForm();
     },
   });
   
-  // אם אין הרשאות, לא להציג את הטופס
+  // If no permissions, don't display the form
   if (!isLoggedIn || (user && !user.isAdmin && !user.isBusiness)) {
     return null;
   }
   
   return (
     <>
-      <h2 className="mb-4">יצירת כרטיס עסק חדש</h2>
+      <h2 className="mb-4">Create New Business Card</h2>
       <form className="w-50" onSubmit={formik.handleSubmit}>
         <div className="form-floating mb-3">
           <input

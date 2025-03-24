@@ -8,10 +8,10 @@ import { errorMessage, sucessMassage } from "../../services/feedbackService";
 import { Card } from "../../interfaces/cards/Cards";
 import { useAuth } from "../context/AuthContext";
 import { useSearch } from "../context/SearchContext";
-import { useDeleteConfirmation } from "../../hooks/useDeleteConfirmation"; // ייבוא ההוק
+import { useDeleteConfirmation } from "../../hooks/useDeleteConfirmation";
 import Bcard from "./Bcard";
 import DeleteConfirmationModal from "../modal/DeleteConfirmationModal";
-// import DeleteConfirmationModal from "../DeleteConfirmationModal"; // ייבוא קומפוננטת המודל
+
 
 interface CardsProps {}
 
@@ -23,36 +23,36 @@ const Cards: FunctionComponent<CardsProps> = () => {
   const { user } = useAuth();
   const { searchTerm } = useSearch();
 
-  // פונקציית המחיקה עצמה שתועבר להוק
+  // Delete handler function to be passed to the hook
   const deleteHandler = async (id: string, type: "card" | "user" | "item") => {
     try {
       if (type === "card") {
-        // בדיקת הרשאות גישה (אופציונלי, כי Bcard אמור לבדוק זאת)
+        // Check permissions (optional, since Bcard should check this)
         const card = cards.find((c) => c._id === id);
-        if (!card) throw new Error("הכרטיס לא נמצא");
+        if (!card) throw new Error("Card not found");
 
-        // ביצוע המחיקה
+        // Execute deletion
         await deleteCard(id);
 
-        // טעינה מחדש של הכרטיסים
+        // Reload cards
         loadCards(true);
-        sucessMassage("הכרטיס נמחק בהצלחה");
+        sucessMassage("Card deleted successfully");
       }
     } catch (err) {
-      console.error("שגיאה במחיקת כרטיס:", err);
-      errorMessage("אירעה שגיאה במחיקת הכרטיס");
+      console.error("Error deleting card:", err);
+      errorMessage("An error occurred while deleting the card");
       throw err;
     }
   };
 
-  // שימוש בהוק המשודרג
+  // Using the enhanced hook
   const { handleDeleteClick, deleteModalProps } =
     useDeleteConfirmation(deleteHandler);
 
   useEffect(() => {
     loadCards();
 
-    // האזנה לאירועי עדכון כרטיסים
+    // Listen for card update events
     const handleCardsUpdated = () => {
       console.log("Cards updated event received in Cards");
       loadCards(true);
@@ -60,13 +60,13 @@ const Cards: FunctionComponent<CardsProps> = () => {
 
     window.addEventListener(CARDS_UPDATED_EVENT, handleCardsUpdated);
 
-    // ניקוי האזנה בעת פירוק הקומפוננטה
+    // Clean up listener when component unmounts
     return () => {
       window.removeEventListener(CARDS_UPDATED_EVENT, handleCardsUpdated);
     };
   }, []);
 
-  // סינון הכרטיסים כאשר מושג החיפוש משתנה
+  // Filter cards when search term changes
   useEffect(() => {
     if (!searchTerm.trim()) {
       setFilteredCards(cards);
@@ -100,11 +100,11 @@ const Cards: FunctionComponent<CardsProps> = () => {
     try {
       const res = await getAllCards(silent);
       setCards(res.data || []);
-      // כאן לא מגדירים את filteredCards, כי useEffect ידאג לכך
+      // We don't set filteredCards here, the useEffect will handle it
     } catch (err) {
-      console.error("שגיאה בטעינת הכרטיסים:", err);
+      console.error("Error loading cards:", err);
       if (!silent) {
-        errorMessage("אירעה שגיאה בטעינת הכרטיסים");
+        errorMessage("An error occurred while loading the cards");
       }
     } finally {
       setLoading(false);
@@ -116,7 +116,7 @@ const Cards: FunctionComponent<CardsProps> = () => {
     return (
       <div className="d-flex justify-content-center my-5">
         <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">טוען...</span>
+          <span className="visually-hidden">Loading...</span>
         </div>
       </div>
     );
@@ -125,14 +125,14 @@ const Cards: FunctionComponent<CardsProps> = () => {
   if (cards.length === 0) {
     return (
       <div className="text-center my-5">
-        <h2>אין כרטיסים להצגה</h2>
-        <p>נסה לחזור מאוחר יותר או ליצור כרטיסים חדשים</p>
+        <h2>No cards to display</h2>
+        <p>Try again later or create new cards</p>
         <button
           onClick={() => loadCards()}
           className="btn btn-outline-primary mt-3"
           disabled={refreshing}
         >
-          {refreshing ? "מרענן..." : "רענן רשימה"}
+          {refreshing ? "Refreshing..." : "Refresh list"}
         </button>
       </div>
     );
@@ -140,73 +140,39 @@ const Cards: FunctionComponent<CardsProps> = () => {
 
   return (
     <div className="container mt-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1>כרטיסי עסק</h1>
-        <button
-          onClick={() => loadCards(true)}
-          className="btn btn-outline-primary"
-          disabled={refreshing}
-        >
-          {refreshing ? (
-            <>
-              <span
-                className="spinner-border spinner-border-sm me-2"
-                role="status"
-                aria-hidden="true"
-              ></span>
-              מרענן...
-            </>
-          ) : (
-            <>
-              <svg
-                width="16"
-                height="16"
-                fill="currentColor"
-                className="me-1"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"
-                />
-                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z" />
-              </svg>
-              רענן רשימה
-            </>
-          )}
-        </button>
+      <div className="mb-4">
+        <h1>Business Cards</h1>
       </div>
 
-      {/* הצגת הודעה כאשר מסננים ואין תוצאות */}
+      {/* Display message when filtering with no results */}
       {searchTerm && filteredCards.length === 0 && (
         <div className="text-center my-5">
-          <h3>לא נמצאו תוצאות לחיפוש "{searchTerm}"</h3>
-          <p>נסה לחפש עם מילות מפתח אחרות או בדוק את האיות</p>
+          <h3>No results found for "{searchTerm}"</h3>
+          <p>Try searching with different keywords or check your spelling</p>
         </div>
       )}
 
-      {/* הצגת מספר התוצאות כאשר מסננים ויש תוצאות */}
+      {/* Display number of results when filtering with results */}
       {searchTerm && filteredCards.length > 0 && (
         <div className="alert alert-info mb-4">
-          נמצאו {filteredCards.length} תוצאות לחיפוש "{searchTerm}"
+          Found {filteredCards.length} results for "{searchTerm}"
         </div>
       )}
 
-      <div className="row">
-        {filteredCards.map((card) => (
-          <div className="col-md-4 col-sm-6 mb-4" key={card._id}>
-            <Bcard
-              card={card}
-              // isMyCard={user && user._id === card.user_id}
-              isMyCard={Boolean(user && user._id === card.user_id)}
-              onDelete={(id) => handleDeleteClick(id, "card")} // שימוש בפונקציה מההוק
-              refreshCards={() => loadCards(true)}
-            />
-          </div>
-        ))}
-      </div>
+<div className="row">
+  {filteredCards.map((card) => (
+    <div className="col-lg-4 col-md-6 col-sm-6 mb-4" key={card._id}>
+      <Bcard
+        card={card}
+        isMyCard={Boolean(user && user._id === card.user_id)}
+        onDelete={(id) => handleDeleteClick(id, "card")}
+        refreshCards={() => loadCards(true)}
+      />
+    </div>
+  ))}
+</div>
 
-      {/* מודל אישור המחיקה */}
+      {/* Delete confirmation modal */}
       <DeleteConfirmationModal {...deleteModalProps} />
     </div>
   );

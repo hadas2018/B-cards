@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, FunctionComponent } from "react";
 import { Card } from "../../interfaces/cards/Cards";
 
 interface CardEditModalProps {
@@ -8,7 +8,7 @@ interface CardEditModalProps {
   onSave: (card: Card) => void;
 }
 
-const CardEditModal: React.FC<CardEditModalProps> = ({
+const CardEditModal: FunctionComponent<CardEditModalProps> = ({
   isOpen,
   card,
   onClose,
@@ -16,31 +16,31 @@ const CardEditModal: React.FC<CardEditModalProps> = ({
 }) => {
   const [editableCard, setEditableCard] = useState<Card | null>(null);
 
-  // עדכון המצב כאשר הכרטיס לעריכה משתנה
+  // Update state when the card to edit changes
   useEffect(() => {
     setEditableCard(card ? { ...card } : null);
   }, [card]);
 
-  // אין מה להציג אם אין כרטיס לעריכה או המודל סגור
+  // Nothing to display if there's no card to edit or the modal is closed
   if (!editableCard || !isOpen) {
     return null;
   }
 
-  // טיפול בשמירת השינויים
+  // Handle saving changes
   const handleSave = () => {
     if (editableCard) {
       onSave(editableCard);
     }
   };
 
-  // עדכון שדה בודד בכרטיס
+  // Update a single field in the card
   const updateCardField = <K extends keyof Card>(field: K, value: Card[K]) => {
     if (editableCard) {
       setEditableCard({ ...editableCard, [field]: value });
     }
   };
 
-  // עדכון שדות בתוך אובייקט הכתובת
+  // Update fields within the address object
   const updateAddressField = (field: string, value: string) => {
     if (editableCard) {
       setEditableCard({
@@ -53,7 +53,7 @@ const CardEditModal: React.FC<CardEditModalProps> = ({
     }
   };
 
-  // עדכון שדות בתוך אובייקט התמונה
+  // Update fields within the image object
   const updateImageField = (field: string, value: string) => {
     if (editableCard) {
       setEditableCard({
@@ -68,13 +68,13 @@ const CardEditModal: React.FC<CardEditModalProps> = ({
 
   return (
     <>
-      {/* Modal Backdrop - עם אפקט טשטוש */}
+      {/* Modal Backdrop - with blur effect */}
       <div
         className={`modal-backdrop fade ${isOpen ? "show" : ""}`}
         style={{
           display: isOpen ? "block" : "none",
-          opacity: 0.8, // הגדלת האטימות (0-1)
-          backdropFilter: "blur(5px)", // אפקט הטשטוש
+          opacity: 0.8, // Increased opacity (0-1)
+          backdropFilter: "blur(5px)", // Blur effect
         }}
       ></div>
 
@@ -91,7 +91,6 @@ const CardEditModal: React.FC<CardEditModalProps> = ({
           role="document"
           style={{
             borderRadius: "15px",
-            // boxShadow: "0 10px 30px rgb(254, 254, 254)",
           }}
         >
           <div className="modal-content">
@@ -210,7 +209,7 @@ const CardEditModal: React.FC<CardEditModalProps> = ({
                     }
                     onChange={(e) => {
                       updateImageField("url", e.target.value);
-                      // לשמירת תאימות עם השדה הישן
+                      // For compatibility with old field
                       updateCardField("imageUrl", e.target.value);
                     }}
                   />
@@ -228,7 +227,7 @@ const CardEditModal: React.FC<CardEditModalProps> = ({
                     }
                     onChange={(e) => {
                       updateImageField("alt", e.target.value);
-                      // לשמירת תאימות עם השדה הישן
+                      // For compatibility with old field
                       updateCardField("imageAlt", e.target.value);
                     }}
                   />
@@ -328,7 +327,7 @@ const CardEditModal: React.FC<CardEditModalProps> = ({
                 </div>
               </div>
 
-              {/* שדה נוסף עבור bizNumber אם קיים */}
+              {/* Additional field for bizNumber if it exists */}
               {editableCard.bizNumber !== undefined && (
                 <div className="mb-3">
                   <label htmlFor="bizNumber" className="form-label">

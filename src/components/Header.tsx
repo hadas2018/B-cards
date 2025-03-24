@@ -2,7 +2,6 @@ import { FunctionComponent, useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import { useSearch } from "./context/SearchContext"; // ייבוא הקונטקסט החדש
-// import SearchInput from "./common/SearchInput"; // ייבוא קומפוננטת החיפוש
 import ThemeToggle from "./ThemeToggle";
 import SearchInput from "./SearchInput";
 

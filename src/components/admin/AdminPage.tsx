@@ -1,9 +1,7 @@
-import { useState, useEffect } from "react";
 import { useSearch } from "../context/SearchContext";
 import {
   fetchAllUsers,
   fetchAllCards,
-  updateUserRole,
   deleteUser,
   deleteCard,
   updateUser,
@@ -20,10 +18,11 @@ import { User } from "../../interfaces/users/User";
 import { Card } from "../../interfaces/cards/Cards";
 import CardEditModal from "../modal/CardEditModal";
 import UserEditModal from "../modal/UserEditModal";
+import { FunctionComponent, useEffect, useState } from "react";
 
-// import { Card, User } from "../../interfaces/types";
+interface AdminPageProps {}
 
-const AdminPage = () => {
+const AdminPage: FunctionComponent<AdminPageProps> = () => {
   // State
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
@@ -54,23 +53,22 @@ const AdminPage = () => {
         setCards((prev) => prev.filter((card) => card._id !== id));
       }
     } catch (err) {
-      console.error(`Error deleting ${type}:`, err);
-      throw err; // העברת השגיאה הלאה להוק
+      throw err; 
     }
   };
 
-  // שימוש בהוק המשודרג עם פונקציית המחיקה
+
   const { handleDeleteClick, deleteModalProps, deleteError } =
     useDeleteConfirmation(deleteHandler);
 
-  // הוספת שגיאת מחיקה לשגיאות הכלליות
+
   useEffect(() => {
     if (deleteError) {
       setError(deleteError);
     }
   }, [deleteError]);
 
-  // Fetch data on component mount with staggered loading
+  
   useEffect(() => {
     const loadData = async () => {
       if (!isLoggedIn || !user?.isAdmin) {
@@ -82,15 +80,14 @@ const AdminPage = () => {
         setIsLoading(true);
         setError(null);
 
-        // תחילה טען משתמשים
+      
         const usersData = await fetchAllUsers();
         setUsers(usersData);
 
-        // אחר כך טען כרטיסים
+     
         const cardsData = await fetchAllCards();
         setCards(cardsData);
       } catch (err) {
-        console.error("Error fetching admin data:", err);
         setError("Failed to load data. Please try again later.");
       } finally {
         setIsLoading(false);
@@ -100,7 +97,7 @@ const AdminPage = () => {
     loadData();
   }, [isLoggedIn, user]);
 
-  // סינון נתונים לפי מושג החיפוש
+ 
   useEffect(() => {
     if (!searchTerm.trim()) {
       setFilteredUsers(users);
@@ -110,7 +107,7 @@ const AdminPage = () => {
 
     const searchTermLower = searchTerm.toLowerCase();
 
-    // סינון משתמשים
+ 
     const matchedUsers = users.filter(
       (user) =>
         user.name?.first?.toLowerCase().includes(searchTermLower) ||
@@ -119,7 +116,7 @@ const AdminPage = () => {
     );
     setFilteredUsers(matchedUsers);
 
-    // סינון כרטיסים
+  
     const matchedCards = cards.filter(
       (card) =>
         card.title.toLowerCase().includes(searchTermLower) ||
@@ -135,31 +132,6 @@ const AdminPage = () => {
     setFilteredCards(matchedCards);
   }, [searchTerm, users, cards]);
 
-  // Users Handlers
-  const handleToggleRole = async (
-    userId: string,
-    role: "admin" | "business"
-  ) => {
-    try {
-      const user = users.find((u) => u._id === userId);
-      if (!user) return;
-
-      const updatedUser = {
-        ...user,
-        isAdmin: role === "admin" ? !user.isAdmin : user.isAdmin,
-        isBusiness: role === "business" ? !user.isBusiness : user.isBusiness,
-      };
-
-      await updateUserRole(userId, updatedUser);
-
-      // Update local state
-      setUsers(users.map((u) => (u._id === userId ? updatedUser : u)));
-    } catch (err) {
-      console.error("Error updating user role:", err);
-      setError("Failed to update user role. Please try again.");
-    }
-  };
-
   const handleEditUser = (user: User) => {
     setUserToEdit(user);
     setShowUserEditModal(true);
@@ -169,17 +141,16 @@ const AdminPage = () => {
     try {
       await updateUser(editedUser._id, editedUser);
 
-      // Update local state
+  
       setUsers(users.map((u) => (u._id === editedUser._id ? editedUser : u)));
       setShowUserEditModal(false);
       setUserToEdit(null);
     } catch (err) {
-      console.error("Error updating user:", err);
       setError("Failed to update user. Please try again.");
     }
   };
 
-  // Cards Handlers
+
   const handleEditCard = (card: Card) => {
     setCardToEdit(card);
     setShowCardEditModal(true);
@@ -189,17 +160,16 @@ const AdminPage = () => {
     try {
       await updateCard(editedCard._id, editedCard);
 
-      // Update local state
+   
       setCards(cards.map((c) => (c._id === editedCard._id ? editedCard : c)));
       setShowCardEditModal(false);
       setCardToEdit(null);
     } catch (err) {
-      console.error("Error updating card:", err);
       setError("Failed to update card. Please try again.");
     }
   };
 
-  // Loading state
+ 
   if (isLoading) {
     return (
       <div className="d-flex justify-content-center align-items-center h-100 py-5">
@@ -211,7 +181,7 @@ const AdminPage = () => {
     );
   }
 
-  // Check admin permissions
+
   if (!user?.isAdmin) {
     return (
       <div className="container py-5">
@@ -231,8 +201,7 @@ const AdminPage = () => {
       <div className="text-center mb-5">
         <h1 className="display-4 mb-3">Client Relations/Content Management</h1>
         <p className="lead">
-          Here you can View/Edit/Delete Cards & users, please click a record to
-          view full details
+          Here you can View, Edit/Delete Cards & users
         </p>
       </div>
 
@@ -242,23 +211,23 @@ const AdminPage = () => {
         </div>
       )}
 
-      {/* הצגת מידע על החיפוש אם יש */}
+     
       {searchTerm && (
         <div className="mb-4">
           {filteredUsers.length > 0 || filteredCards.length > 0 ? (
             <div className="alert alert-info">
-              נמצאו {filteredUsers.length} משתמשים ו-{filteredCards.length}{" "}
-              כרטיסים לחיפוש "{searchTerm}"
+              Found for the search {filteredUsers.length} users &- {filteredCards.length}{" "}
+              Cards   "{searchTerm}"
             </div>
           ) : (
             <div className="alert alert-warning">
-              לא נמצאו תוצאות לחיפוש "{searchTerm}"
+              No search results found! "{searchTerm}"
             </div>
           )}
         </div>
       )}
 
-      {/* Tabs for switching between users and cards */}
+     
       <ul className="nav nav-tabs mb-4 justify-content-center">
         <li className="nav-item">
           <button
@@ -278,7 +247,7 @@ const AdminPage = () => {
         </li>
       </ul>
 
-      {/* Display either users or cards based on active tab */}
+      
       <div className="mb-5">
         <h2 className="text-center mb-4">
           {activeTab === "users" ? "Users" : "Cards"} Management
@@ -287,21 +256,18 @@ const AdminPage = () => {
         {activeTab === "users" ? (
           <UsersTable
             users={filteredUsers}
-            onToggleRole={handleToggleRole}
             onEditUser={handleEditUser}
             onDeleteUser={(id) => handleDeleteClick(id, "user")}
           />
         ) : (
           <CardsTable
             cards={filteredCards}
-            users={users}
             onEditCard={handleEditCard}
             onDeleteCard={(id) => handleDeleteClick(id, "card")}
           />
         )}
       </div>
 
-      {/* Modals */}
       <DeleteConfirmationModal {...deleteModalProps} />
 
       <UserEditModal

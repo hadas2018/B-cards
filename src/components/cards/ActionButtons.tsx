@@ -8,11 +8,11 @@ interface ActionButtonsProps {
   isLiked: boolean;
   handleLikeClick: () => Promise<void>;
   formatPhoneNumber: (phone: string) => string;
-  styleClass?: string; // לאפשר גמישות בסגנון הכפתורים
-  iconSize?: number; // גודל האייקון
-  isOwner?: boolean; // האם המשתמש הוא הבעלים של הכרטיס
-  onDelete?: (id: string) => void; // פונקציה למחיקת כרטיס
-  displayMode?: 'all' | 'basic' | 'edit' | 'delete'; // מצב תצוגה - כל הכפתורים או מצבים ספציפיים
+  styleClass?: string; // Allow flexibility in button styles
+  iconSize?: number; // Icon size
+  isOwner?: boolean; // Whether the user owns the card
+  onDelete?: (id: string) => void; // Function to delete card
+  displayMode?: 'all' | 'basic' | 'edit' | 'delete'; // Display mode - all buttons or specific modes
 }
 
 const ActionButtons: FunctionComponent<ActionButtonsProps> = ({
@@ -27,16 +27,16 @@ const ActionButtons: FunctionComponent<ActionButtonsProps> = ({
   onDelete,
   displayMode = 'all',
 }) => {
-  // בדיקה אם יש כתובת אתר לעסק
+  // Check if business has a website
   const hasWebsite = !!card.web;
   
   return (
     <div className="d-flex gap-2">
-      {/* אייקון טלפון */}
+      {/* Phone icon */}
       <a
         href={`tel:${card.phone}`}
         className={`btn btn-outline-primary ${styleClass}`}
-        title="התקשר"
+        title="Call"
       >
         <svg width={iconSize} height={iconSize} viewBox="0 0 256 256">
           <path
@@ -46,13 +46,13 @@ const ActionButtons: FunctionComponent<ActionButtonsProps> = ({
         </svg>
       </a>
 
-      {/* אייקון וואטסאפ */}
+      {/* WhatsApp icon */}
       <a
         href={`https://wa.me/${formatPhoneNumber(card.phone)}`}
         target="_blank"
         rel="noopener noreferrer"
         className={`btn btn-outline-success ${styleClass}`}
-        title="שלח הודעת וואטסאפ"
+        title="Send WhatsApp message"
       >
         <svg width={iconSize} height={iconSize} viewBox="0 0 256 256">
           <path
@@ -66,14 +66,14 @@ const ActionButtons: FunctionComponent<ActionButtonsProps> = ({
         </svg>
       </a>
 
-      {/* אייקון לאתר - מופיע רק אם יש אתר */}
+      {/* Website icon - only shows if website exists */}
       {hasWebsite && (
         <a
           href={card.web}
           target="_blank"
           rel="noopener noreferrer"
           className={`btn btn-outline-info ${styleClass}`}
-          title="בקר באתר"
+          title="Visit website"
         >
           <svg width={iconSize} height={iconSize} viewBox="0 0 256 256">
             <path
@@ -84,14 +84,14 @@ const ActionButtons: FunctionComponent<ActionButtonsProps> = ({
         </a>
       )}
 
-      {/* אייקון לייק - רק למשתמשים מחוברים */}
+      {/* Like icon - only for logged in users */}
       {isLoggedIn && (
         <button
           className={`btn ${
             isLiked ? "btn-danger" : "btn-outline-danger"
           } ${styleClass}`}
           onClick={handleLikeClick}
-          title={isLiked ? "הסר לייק" : "הוסף לייק"}
+          title={isLiked ? "Remove like" : "Add like"}
         >
           <svg width={iconSize} height={iconSize} viewBox="0 0 256 256">
             <path
@@ -106,12 +106,12 @@ const ActionButtons: FunctionComponent<ActionButtonsProps> = ({
         </button>
       )}
 
-      {/* כפתור עריכה - רק למשתמשים בעלים */}
+      {/* Edit button - only for owners */}
       {isOwner && (displayMode === 'all' || displayMode === 'edit') && (
         <Link
           to={`/edit-card/${card._id}`}
           className={`btn btn-outline-warning ${styleClass}`}
-          title="ערוך כרטיס"
+          title="Edit card"
         >
           <svg width={iconSize} height={iconSize} viewBox="0 0 256 256">
             <path
@@ -122,7 +122,7 @@ const ActionButtons: FunctionComponent<ActionButtonsProps> = ({
         </Link>
       )}
 
-      {/* כפתור מחיקה - רק למשתמשים בעלים */}
+      {/* Delete button - only for owners */}
       {isOwner && (displayMode === 'all' || displayMode === 'delete') && card._id && (
         <button
           className={`btn btn-outline-danger ${styleClass}`}
@@ -131,13 +131,13 @@ const ActionButtons: FunctionComponent<ActionButtonsProps> = ({
               if (onDelete) {
                 onDelete(card._id as string);
               } else {
-                console.warn("פונקציית מחיקה לא הוגדרה");
+                console.warn("Delete function not defined");
               }
             } catch (err) {
-              console.error("שגיאה בהפעלת פונקציית המחיקה:", err);
+              console.error("Error executing delete function:", err);
             }
           }}
-          title="מחק כרטיס"
+          title="Delete card"
         >
           <svg width={iconSize} height={iconSize} viewBox="0 0 256 256">
             <path

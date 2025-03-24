@@ -6,15 +6,7 @@ interface CardLocationProps {
 }
 
 const CardLocation: FunctionComponent<CardLocationProps> = ({ card }) => {
-  // פונקציה לקבלת קישור לגוגל מפות
-  const getGoogleMapsLink = () => {
-    const address = `${card.address.street} ${card.address.houseNumber}, ${card.address.city}, ${card.address.country}`;
-    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-      address
-    )}`;
-  };
 
-  // פונקציה לקבלת קישור לקבלת הנחיות הגעה
   const getDirectionsLink = () => {
     const address = `${card.address.street} ${card.address.houseNumber}, ${card.address.city}, ${card.address.country}`;
     return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
@@ -24,7 +16,7 @@ const CardLocation: FunctionComponent<CardLocationProps> = ({ card }) => {
 
   return (
     <div className="card shadow-lg rounded-3 mb-4 overflow-hidden">
-      <div className="card-header bg-light py-3">
+      <div className="card-header py-3">
         <h4 className="card-title mb-0">
           <svg
             width="20"
@@ -37,12 +29,12 @@ const CardLocation: FunctionComponent<CardLocationProps> = ({ card }) => {
               fill="currentColor"
             />
           </svg>
-          מיקום העסק
+          business location
         </h4>
       </div>
 
       {/* מפת Google מוטמעת */}
-      <div style={{ position: "relative", height: "300px", width: "100%" }}>
+      <div style= {{ position: "relative", height: "300px", width: "100%" }}>
         <iframe
           src={`https://maps.google.com/maps?q=${encodeURIComponent(
             `${card.address.street} ${card.address.houseNumber}, ${card.address.city}, ${card.address.country}`
@@ -53,7 +45,7 @@ const CardLocation: FunctionComponent<CardLocationProps> = ({ card }) => {
           allowFullScreen
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
-          title="מיקום העסק"
+          title="business location"
         ></iframe>
       </div>
 
@@ -70,7 +62,7 @@ const CardLocation: FunctionComponent<CardLocationProps> = ({ card }) => {
               fill="currentColor"
             />
           </svg>
-          הנחיות הגעה
+          Directions
         </a>
       </div>
     </div>
